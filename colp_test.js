@@ -43,7 +43,7 @@ function hsvToRGB(hue, saturation, value) {
 
     throw new Error('invalid hue');
 }
-
+/*可能なら別ファイル化*/
 
 var width=300;
 var height=300;
@@ -55,19 +55,30 @@ canvas.height=height;
 document.body.appendChild(canvas);
 
 
+/*拡張性向上の為 全数値を変数化*/
+/*
+計算
+キャンバスの中心
+*/
+
+/*
+グラデーション四角の高さ 幅
+グラデーション四角の始点 終点
+*/
 
 var yh=0;
 Color1=[255,255,255]
-Color2=hsvToRGB(100,100,100)
+Color2=hsvToRGB(0,100,100)
 var lr=Color1[0],lg=Color1[1],lb=Color1[2];
 var rr=Color2[0],rg=Color2[1],rb=Color2[2];
 var stepl=255/height;
 var steprr=rr/height;
-var steprg=rr/height;
-var steprb=rr/height;
+var steprg=rg/height;
+var steprb=rb/height;
 console.log(steprb)
 
 for(var startyh=yh;startyh<=height;startyh++){
+ctx.beginPath();
     var grad=null;
       grad= ctx.createLinearGradient(0,startyh,width,startyh);
   /* グラデーション終点のオフセットと色をセット */
@@ -86,7 +97,7 @@ for(var startyh=yh;startyh<=height;startyh++){
     rg-=steprg;
     rb-=steprb;
     //console.log(rr+','+rg+' , '+rb)
-    console.log(lr+','+lg+' , '+lb)
+    //console.log(lr+','+lg+' , '+lb)
 
 }
     
