@@ -60,11 +60,16 @@ document.body.appendChild(canvas);
 計算
 キャンバスの中心
 */
+var centerX=canvas.width/2;
+var centerY=canvas.height/2;
 
 /*
 グラデーション四角の高さ 幅
 グラデーション四角の始点 終点
 */
+var cwhlength=150;
+var swp=(width/2)-(cwhlength/2);
+var shp=(height/2)-(cwhlength/2);
 
 var yh=0;
 Color1=[255,255,255]
