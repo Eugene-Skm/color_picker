@@ -67,7 +67,7 @@ var centerY=canvas.height/2;
 グラデーション四角の高さ 幅
 グラデーション四角の始点 終点
 */
-var cwhlength=150;
+var cwhlength=200
 var swp=(width/2)-(cwhlength/2);
 var shp=(height/2)-(cwhlength/2);
 
@@ -76,23 +76,23 @@ Color1=[255,255,255]
 Color2=hsvToRGB(0,100,100)
 var lr=Color1[0],lg=Color1[1],lb=Color1[2];
 var rr=Color2[0],rg=Color2[1],rb=Color2[2];
-var stepl=255/height;
-var steprr=rr/height;
-var steprg=rg/height;
-var steprb=rb/height;
+var stepl=255/cwhlength;
+var steprr=rr/cwhlength;
+var steprg=rg/cwhlength;
+var steprb=rb/cwhlength;
 console.log(steprb)
 
-for(var startyh=yh;startyh<=height;startyh++){
+for(var startyh=shp;startyh<=shp+cwhlength;startyh++){
 ctx.beginPath();
     var grad=null;
-      grad= ctx.createLinearGradient(0,startyh,width,startyh);
+      grad= ctx.createLinearGradient(swp,startyh,swp+cwhlength,startyh);
   /* グラデーション終点のオフセットと色をセット */
   grad.addColorStop(0,'rgb('+lr+','+lg+' , '+lb+')');
   grad.addColorStop(1,'rgb('+rr+','+rg+' , '+rb+')');
 /* グラデーションをfillStyleプロパティにセット */
   ctx.fillStyle = grad;
   /* 矩形を描画 */
-  ctx.rect(0,startyh,width,1)
+  ctx.rect(swp,startyh,cwhlength,1)
   ctx.fill();
     
     lr-=stepl;
@@ -101,9 +101,7 @@ ctx.beginPath();
     rr-=steprr;
     rg-=steprg;
     rb-=steprb;
-    //console.log(rr+','+rg+' , '+rb)
-    //console.log(lr+','+lg+' , '+lb)
-
+    
 }
     
     /*
