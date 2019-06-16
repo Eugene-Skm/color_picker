@@ -88,7 +88,7 @@ ctx.beginPath();
       grad= ctx.createLinearGradient(swp,startyh,swp+cwhlength,startyh);
   /* グラデーション終点のオフセットと色をセット */
   grad.addColorStop(0,'rgb('+lr+','+lg+' , '+lb+')');
-  grad.addColorStop(1,'rgb('+rr+','+rg+' , '+rb+')');
+  grad.addColorStop(1,'rgb('+rr+','+rg+' , '+rb+')');  
 /* グラデーションをfillStyleプロパティにセット */
   ctx.fillStyle = grad;
   /* 矩形を描画 */

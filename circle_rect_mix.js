@@ -137,25 +137,55 @@ for(var startyh=shp;startyh<=shp+cwhlength;startyh++){
 }
 
 /**------------------カラーサークルピックポイント描画------------------------------**/
+/*ファンクション化時に実行呼び出し初期化関数にデフォルト位置のXYを渡させる*/
+/*マウスからの入力も別関数で並行*/
+
 /*サークルの幅の中心距離*/
 var rmiddle=routside-(widthofround/2);
-/*マウス座標のX（仮値）*/
-var mx=200;
-/*マウス座標のY（仮値）*/
+/*マウス座標のX（仮値）マウス入力設置時は場所変更　毎入力ごとに初期化されてしまう*/
+var mx=100;
+/*マウス座標のY（仮値）マウス入力設置時は場所変更　毎入力ごとに初期化されてしまう*/
 var my=200;
 /*セレクトポインタの角度*/
 var pointangle=Math.atan2(my-centerY,mx-centerX)/Math.PI/2*360;
 
 var SpointX=centerX+rmiddle*Math.cos(pointangle*(Math.PI/180))
-var SpointY=centerY+rmiddle*Math.cos(pointangle*(Math.PI/180))
+var SpointY=centerY+rmiddle*Math.sin(pointangle*(Math.PI/180))
 
-console.log(pointangle)
-console.log(SpointX,SpointY)
+Spointpaint(SpointX,SpointY);
 
-ctx.beginPath();
-ctx.arc(SpointX, SpointY, 7, 0, Math.PI * 2, true);
-ctx.arc(SpointX, SpointY, 4, 0, Math.PI * 2, false);
-ctx.strokeStyle="#000000"
-ctx.stroke()
-ctx.fillStyle="#ffffff"
-ctx.fill();
+/**------------------カラースクエアピックポイント描画------------------------------**/
+/*ファンクション化時に実行呼び出し初期化関数にデフォルト位置のXYを渡させる*/
+/*マウスからの入力も別関数で並行*/
+
+/*マウス座標のX（仮値）*/
+var msx=7110
+/*マウス座標のY（仮値）*/
+var msy=2120
+/*ポインタ表示位置X　　マウス入力設置時は場所変更　毎入力ごとに初期化されてしまう*/
+var SSpointX=swp+cwhlength;
+/*ポインタ表示位置Y　　マウス入力設置時は場所変更　毎入力ごとに初期化されてしまう*/
+var SSpointY=shp;  
+console.log(canvas.offsetTop)
+if(msx>=canvas.offsetLeft+swp&&msx<=canvas.offsetLeft+swp+cwhlength){
+    SSpointX=msx-canvas.offsetLeft;
+    console.log("D")
+}
+if(msy>=canvas.offsetTop+shp&&msy<=canvas.offsetTop+shp+cwhlength){
+        
+        SSpointY=msy-canvas.offsetTop;
+}
+Spointpaint(SSpointX,SSpointY);
+
+
+
+function Spointpaint(PX,PY){
+    console.log(PX,PY)
+    ctx.beginPath();
+    ctx.arc(PX, PY, 7, 0, Math.PI * 2, true);
+    ctx.arc(PX, PY, 4, 0, Math.PI * 2, false);
+    ctx.strokeStyle="#000000"
+    ctx.stroke()
+    ctx.fillStyle="#ffffff"
+    ctx.fill();
+}
