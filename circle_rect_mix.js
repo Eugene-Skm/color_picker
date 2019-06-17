@@ -94,6 +94,16 @@ selcanvas.style.position = 'absolute';
 document.body.appendChild(selcanvas);
 
 
+document.addEventListener("DOMContentLoaded", function () {
+
+    selcanvas.addEventListener("mousedown", function (event) {
+        rect = canvas.getBoundingClientRect();
+        Xd = event.clientX - Math.floor(rect.left);
+        Yd = event.clientY - Math.floor(rect.top);
+
+    }, false);
+}, false);
+
 /**------------------カラーサークル描画------------------------------**/
 
 /*円の外側距離*/
@@ -132,7 +142,7 @@ for (x = 0; x < canvas.width; x++) {
     }
 }
 ctx.putImageData(canvasdata, 0, 0);
-cicle_draw(width/2,0);
+cicle_draw(width / 2, 0);
 //drawsquare(hue)
 
 /**------------------カラースクエア描画------------------------------**/
@@ -195,7 +205,7 @@ function cicle_draw(mx, my) {
     cspcx = SpointX;
     cspcy = SpointY;
     Spointpaint(SpointX, SpointY);
-    col=ctx.getImageData(SpointX,SpointY,1,1).data;
+    col = ctx.getImageData(SpointX, SpointY, 1, 1).data;
     drawsquare(col);
 }
 /**------------------カラースクエアピックポイント描画------------------------------**/
