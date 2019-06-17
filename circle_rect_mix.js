@@ -53,6 +53,7 @@ document.onmousemove = function (e){
 	//console.log(e);
     
     cicle_draw(e.clientX,e.clientY)
+    
 };
 
 
@@ -123,9 +124,9 @@ for (x = 0; x < canvas.width; x++) {
         var basedindex = (y * width + x) * 4;
 
         if (pixeldata[basedindex] > 0) {
-            var hue = Math.atan2(y - centerY, x - centerX) / Math.PI / 2 * 360;
+            var hue = (Math.atan2(y - centerY, x - centerX) / Math.PI / 2 * 360)+90;
             var colors = hsvToRGB(hue, 100, 100);
-
+            
             pixeldata[basedindex] = colors[0];
             pixeldata[basedindex + 1] = colors[1];
             pixeldata[basedindex + 2] = colors[2];
