@@ -46,14 +46,11 @@ function hsvToRGB(hue, saturation, value) {
 }
 
 
-document.onmousemove = function (e){
-	if(!e) e = window.event; // レガシー
+document.onmousemove = function (e) {
+    if (!e) e = window.event; // レガシー
 
-	// 出力テスト
-	//console.log(e);
-    
-    cicle_draw(e.clientX,e.clientY)
-    
+    cicle_draw(e.clientX, e.clientY)
+
 };
 
 
@@ -67,9 +64,9 @@ var sspcx;
 /*スクエアセレクタポイント中心Y*/
 var sspcy;
 /*スクエアセレクト評価*/
-var Square_select_check=0;
+var Square_select_check = 0;
 /*サークルセレクト評価*/
-var Circle_select_check=0;
+var Circle_select_check = 0;
 
 /**------------------キャンバス定義------------------------------**/
 
@@ -83,17 +80,17 @@ var canvas = document.createElement("canvas");
 var ctx = canvas.getContext("2d");
 canvas.width = width;
 canvas.height = height;
-canvas.style.position='absolute';
+canvas.style.position = 'absolute';
 document.body.appendChild(canvas);
 
 /*ピッカー用キャンバス*/
-var selcanvas=document.createElement("canvas");
-var selctx=selcanvas.getContext('2d');
+var selcanvas = document.createElement("canvas");
+var selctx = selcanvas.getContext('2d');
 /*selcanvas.style.left=canvas.offsetLeft;
 selcanvas.style.top=canvas.offsetTop;*/
-selcanvas.width=canvas.width;
-selcanvas.height=canvas.height;
-selcanvas.style.position='absolute';
+selcanvas.width = canvas.width;
+selcanvas.height = canvas.height;
+selcanvas.style.position = 'absolute';
 document.body.appendChild(selcanvas);
 
 
@@ -124,9 +121,9 @@ for (x = 0; x < canvas.width; x++) {
         var basedindex = (y * width + x) * 4;
 
         if (pixeldata[basedindex] > 0) {
-            var hue = (Math.atan2(y - centerY, x - centerX) / Math.PI / 2 * 360)+90;
+            var hue = (Math.atan2(y - centerY, x - centerX) / Math.PI / 2 * 360) + 90;
             var colors = hsvToRGB(hue, 100, 100);
-            
+
             pixeldata[basedindex] = colors[0];
             pixeldata[basedindex + 1] = colors[1];
             pixeldata[basedindex + 2] = colors[2];
@@ -135,7 +132,8 @@ for (x = 0; x < canvas.width; x++) {
     }
 }
 ctx.putImageData(canvasdata, 0, 0);
-drawsquare(hue)
+cicle_draw(width/2,0);
+//drawsquare(hue)
 
 /**------------------カラースクエア描画------------------------------**/
 /*カラースクエア縦横長さ */
@@ -145,13 +143,13 @@ var swp;
 /*カラースクエア開始Y点 */
 var shp;
 
-function drawsquare(huei) {
+function drawsquare(Color2) {
     cwhlength = 160;
     swp = (width / 2) - (cwhlength / 2);
     shp = (height / 2) - (cwhlength / 2);
 
     Color1 = [255, 255, 255];
-    Color2 = hsvToRGB(huei, 100, 100);
+    //Color2 = hsvToRGB(huei, 100, 100);
     var lr = Color1[0],
         lg = Color1[1],
         lb = Color1[2];
@@ -180,52 +178,53 @@ function drawsquare(huei) {
         rr -= steprr;
         rg -= steprg;
         rb -= steprb;
-
     }
 }
 
 /**------------------カラーサークルピックポイント描画------------------------------**/
 /*ファンクション化時に実行呼び出し初期化関数にデフォルト位置のXYを渡させる*/
 /*マウスからの入力も別関数で並行*/
-function cicle_draw(mx,my){
-/*サークルの幅の中心距離*/
-var rmiddle = routside - (widthofround / 2);
-/*セレクトポインタの角度*/
-var pointangle = Math.atan2(my - centerY, mx - centerX) / Math.PI / 2 * 360;
+function cicle_draw(mx, my) {
+    /*サークルの幅の中心距離*/
+    var rmiddle = routside - (widthofround / 2);
+    /*セレクトポインタの角度*/
+    var pointangle = Math.atan2(my - centerY, mx - centerX) / Math.PI / 2 * 360;
 
-var SpointX = centerX + rmiddle * Math.cos(pointangle * (Math.PI / 180));
-var SpointY = centerY + rmiddle * Math.sin(pointangle * (Math.PI / 180));
-cspcx=SpointX;
-cspcy=SpointY;
-Spointpaint(SpointX, SpointY);
+    var SpointX = centerX + rmiddle * Math.cos(pointangle * (Math.PI / 180));
+    var SpointY = centerY + rmiddle * Math.sin(pointangle * (Math.PI / 180));
+    cspcx = SpointX;
+    cspcy = SpointY;
+    Spointpaint(SpointX, SpointY);
+    col=ctx.getImageData(SpointX,SpointY,1,1).data;
+    drawsquare(col);
 }
 /**------------------カラースクエアピックポイント描画------------------------------**/
 /*ファンクション化時に実行呼び出し初期化関数にデフォルト位置のXYを渡させる*/
 /*マウスからの入力も別関数で並行*/
-function square_draw(msx,msy){
-/*マウス座標のX（仮値）*/
-/*var msx = 7110;
-/*マウス座標のY（仮値）*/
-/*var msy = 2120;
-/*ポインタ表示位置X　　マウス入力設置時は場所変更　毎入力ごとに初期化されてしまう*/
-var SSpointX = swp + cwhlength;
-/*ポインタ表示位置Y　　マウス入力設置時は場所変更　毎入力ごとに初期化されてしまう*/
-var SSpointY = shp;
+function square_draw(msx, msy) {
+    /*マウス座標のX（仮値）*/
+    /*var msx = 7110;
+    /*マウス座標のY（仮値）*/
+    /*var msy = 2120;
+    /*ポインタ表示位置X　　マウス入力設置時は場所変更　毎入力ごとに初期化されてしまう*/
+    var SSpointX = swp + cwhlength;
+    /*ポインタ表示位置Y　　マウス入力設置時は場所変更　毎入力ごとに初期化されてしまう*/
+    var SSpointY = shp;
 
-if (msx >= canvas.offsetLeft + swp && msx <= canvas.offsetLeft + swp + cwhlength) {
-    SSpointX = msx - canvas.offsetLeft;
-}
-if (msy >= canvas.offsetTop + shp && msy <= canvas.offsetTop + shp + cwhlength) {
-    SSpointY = msy - canvas.offsetTop;
-}
-sspcx=SSpointX;
-sspcy=SSpointY;
+    if (msx >= canvas.offsetLeft + swp && msx <= canvas.offsetLeft + swp + cwhlength) {
+        SSpointX = msx - canvas.offsetLeft;
+    }
+    if (msy >= canvas.offsetTop + shp && msy <= canvas.offsetTop + shp + cwhlength) {
+        SSpointY = msy - canvas.offsetTop;
+    }
+    sspcx = SSpointX;
+    sspcy = SSpointY;
 
-Spointpaint(SSpointX, SSpointY);
+    Spointpaint(SSpointX, SSpointY);
 }
 
 function Spointpaint(PX, PY) {
-    selctx.clearRect(0,0,width,height)
+    selctx.clearRect(0, 0, width, height)
     selctx.beginPath();
     selctx.arc(PX, PY, 7, 0, Math.PI * 2, true);
     selctx.arc(PX, PY, 4, 0, Math.PI * 2, false);
