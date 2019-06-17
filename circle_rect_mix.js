@@ -48,11 +48,11 @@ function hsvToRGB(hue, saturation, value) {
 
 document.onmousemove = function (e) {
     if (!e) e = window.event; // レガシー
-
+    if(Circle_select_check==1){
     cicle_draw(e.clientX, e.clientY)
+    }
 
 };
-
 
 /**------------------変数定義------------------------------**/
 /*サークルセレクタポイント中心X*/
@@ -97,9 +97,27 @@ document.body.appendChild(selcanvas);
 document.addEventListener("DOMContentLoaded", function () {
 
     selcanvas.addEventListener("mousedown", function (event) {
+        if(event.offsetX>=cspcx-7&&event.offsetX<=cspcx+7&&event.offsetY>=cspcy-7&&event.offsetY<=cspcy+7){
+            event.offsetX
+            Circle_select_check=1;
+        }
+        /*console.log(event.clientX,event.offsetX)
+        console.log(Circle_select_check)
         rect = canvas.getBoundingClientRect();
         Xd = event.clientX - Math.floor(rect.left);
-        Yd = event.clientY - Math.floor(rect.top);
+        Yd = event.clientY - Math.floor(rect.top);*/
+
+    }, false);
+    selcanvas.addEventListener("mouseup", function (event) {
+        //if(event.clientX>=cspcx-3&&event.clientX<=cspcx+3&&event.clientY>=cspcy-3&&event.clientY<=cspcy+3){
+            Circle_select_check=0;
+            Square_select_check=0;
+        //}
+        /*console.log(event.clientX)
+        console.log(Circle_select_check)
+        rect = canvas.getBoundingClientRect();
+        Xd = event.clientX - Math.floor(rect.left);
+        Yd = event.clientY - Math.floor(rect.top);*/
 
     }, false);
 }, false);
