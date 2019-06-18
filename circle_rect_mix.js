@@ -77,26 +77,30 @@ var height = 300;
 /*カラー用キャンバス*/
 var canvas = document.createElement("canvas");
 var ctx = canvas.getContext("2d");
+canvas.style.position = 'absolute';
+canvas.style.left="0px";
+canvas.style.top="0px";
 canvas.width = width;
 canvas.height = height;
-canvas.style.position = 'absolute';
+console.log(canvas.style.left)
 document.body.appendChild(canvas);
 
 /*ピッカー用キャンバス*/
 var selcanvas = document.createElement("canvas");
 var selctx = selcanvas.getContext('2d');
-/*selcanvas.style.left=canvas.offsetLeft;
-selcanvas.style.top=canvas.offsetTop;*/
+selcanvas.style.position = 'absolute';
+selcanvas.style.left=canvas.style.left;
+selcanvas.style.top=canvas.style.top;
 selcanvas.width = canvas.width;
 selcanvas.height = canvas.height;
-selcanvas.style.position = 'absolute';
+
 document.body.appendChild(selcanvas);
 
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    selcanvas.addEventListener("mousedown", function (event) {
-        if(event.offsetX>=cspcx-7&&event.offsetX<=cspcx+7&&event.offsetY>=cspcy-7&&event.offsetY<=cspcy+7){
+    document.addEventListener("mousedown", function (event) {
+        if(event.offsetX+selcanvas.offsetLeft>=cspcx-7&&event.offsetX+selcanvas.offsetLeft<=cspcx+10&&event.offsetY+selcanvas.offsetTop>=cspcy-7&&event.offsetY+selcanvas.offsetTop<=cspcy+10){
             event.offsetX
             Circle_select_check=1;
         }
@@ -107,7 +111,7 @@ document.addEventListener("DOMContentLoaded", function () {
         Yd = event.clientY - Math.floor(rect.top);*/
 
     }, false);
-    selcanvas.addEventListener("mouseup", function (event) {
+    document.addEventListener("mouseup", function (event) {
         //if(event.clientX>=cspcx-3&&event.clientX<=cspcx+3&&event.clientY>=cspcy-3&&event.clientY<=cspcy+3){
             Circle_select_check=0;
             Square_select_check=0;
