@@ -45,7 +45,6 @@ function hsvToRGB(hue, saturation, value) {
     throw new Error('invalid hue');
 }
 
-
 document.onmousemove = function (e) {
     if (!e) e = window.event; // レガシー
     if(Circle_select_check==1){
@@ -210,8 +209,7 @@ function drawsquare(Color2) {
 }
 
 /**------------------カラーサークルピックポイント描画------------------------------**/
-/*ファンクション化時に実行呼び出し初期化関数にデフォルト位置のXYを渡させる*/
-/*マウスからの入力も別関数で並行*/
+
 function cicle_draw(mx, my) {
     /*サークルの幅の中心距離*/
     var rmiddle = routside - (widthofround / 2);
