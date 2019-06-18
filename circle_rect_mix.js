@@ -259,7 +259,6 @@ function square_draw(msx, msy) {
 }
 
 function Spointpaint(PX, PY) {
-
     selctx.beginPath();
     selctx.arc(PX, PY, 7, 0, Math.PI * 2, true);
     selctx.arc(PX, PY, 4, 0, Math.PI * 2, false);
