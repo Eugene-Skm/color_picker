@@ -127,10 +127,11 @@ document.onmousemove = function (e) {
         /*ポインタ表示位置Y　　マウス入力設置時は場所変更　毎入力ごとに初期化されてしまう*/
         var SSpointY = sspcy
 
-        if (e.clientX - selcanvas.offsetLeft >= canvas.offsetLeft + square_start_X && e.clientX - selcanvas.offsetLeft <= canvas.offsetLeft + square_start_X + cwhlength) {
+        if (e.clientX  >= canvas.offsetLeft + square_start_X && e.clientX <= canvas.offsetLeft + square_start_X + cwhlength) {
             SSpointX = e.clientX - canvas.offsetLeft;
         }
-        if (e.clientY - selcanvas.offsetTop >= canvas.offsetTop + square_start_Y && e.clientY - selcanvas.offsetTop <= canvas.offsetTop + square_start_Y + cwhlength) {
+        console.log("B",e.clientY - selcanvas.offsetTop,canvas.offsetTop + square_start_Y)
+        if (e.clientY  >= canvas.offsetTop + square_start_Y && e.clientY <= canvas.offsetTop + square_start_Y + cwhlength) {
             SSpointY = e.clientY - canvas.offsetTop;
             console.log("BB")
         }
@@ -235,7 +236,7 @@ function drawsquare(Color2) {
 /**------------------カラーサークルピックポイント描画------------------------------**/
 
 function cicle_picker_draw(mx, my) {
-    selctx.clearRect(0, 0, width, height)
+    
     /*サークルの幅の中心距離*/
     var rmiddle = routside - (widthofround / 2);
     /*セレクトポインタの角度*/
@@ -259,10 +260,19 @@ function square_draw(msx, msy) {
 }
 
 function Spointpaint(PX, PY) {
-
+    selctx.clearRect(0, 0, width, height)
+    
     selctx.beginPath();
-    selctx.arc(PX, PY, 7, 0, Math.PI * 2, true);
-    selctx.arc(PX, PY, 4, 0, Math.PI * 2, false);
+    selctx.arc(sspcx, sspcy, 7, 0, Math.PI * 2, true);
+    selctx.arc(sspcx, sspcy, 4, 0, Math.PI * 2, false);
+    selctx.strokeStyle = "#000000";
+    selctx.stroke();
+    selctx.fillStyle = "#ffffff";
+    selctx.fill();
+    
+    selctx.beginPath();
+    selctx.arc(cspcx, cspcy, 7, 0, Math.PI * 2, true);
+    selctx.arc(cspcx, cspcy, 4, 0, Math.PI * 2, false);
     selctx.strokeStyle = "#000000";
     selctx.stroke();
     selctx.fillStyle = "#ffffff";
