@@ -193,7 +193,6 @@ cicle_picker_draw(width / 2, 0);
 
 /**------------------カラースクエア描画------------------------------**/
 
-
 function drawsquare(Color2) {
     //cwhlength = 160;
     //square_start_X = (width / 2) - (cwhlength / 2);
@@ -260,8 +259,8 @@ function square_draw(msx, msy) {
 }
 
 function Spointpaint(PX, PY) {
-<<<<<<< HEAD
-=======
+/*<<<<<<< HEAD
+=======*/
     selctx.clearRect(0, 0, width, height)
     
     selctx.beginPath();
@@ -272,7 +271,7 @@ function Spointpaint(PX, PY) {
     selctx.fillStyle = "#ffffff";
     selctx.fill();
     
->>>>>>> db002451ede09f244c740ce8b3edf8df18ab698a
+/*>>>>>>> db002451ede09f244c740ce8b3edf8df18ab698a*/
     selctx.beginPath();
     selctx.arc(cspcx, cspcy, 7, 0, Math.PI * 2, true);
     selctx.arc(cspcx, cspcy, 4, 0, Math.PI * 2, false);
