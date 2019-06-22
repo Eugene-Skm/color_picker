@@ -62,9 +62,9 @@ var Circle_select_check = 0;
 /**------------------キャンバス定義------------------------------**/
 
 /*キャンバス横幅*/
-var width = 300;
+var width = 100;
 /*キャンバス縦幅*/
-var height = 300;
+var height = 100;
 
 /*カラー用キャンバス*/
 var canvas = document.createElement("canvas");
@@ -90,10 +90,10 @@ document.body.appendChild(selcanvas);
 document.addEventListener("DOMContentLoaded", function () {
 
     document.addEventListener("mousedown", function (event) {
-        if (event.clientX - selcanvas.offsetLeft >= cspcx - 7 && event.clientX - selcanvas.offsetLeft <= cspcx + 10 && event.clientY - selcanvas.offsetTop >= cspcy - 7 && event.clientY - selcanvas.offsetTop <= cspcy + 10) {
+        if (event.pageX - selcanvas.offsetLeft >= cspcx - 7 && event.pageX - selcanvas.offsetLeft <= cspcx + 10 && event.pageY - selcanvas.offsetTop >= cspcy - 7 && event.pageY - selcanvas.offsetTop <= cspcy + 10) {
             Circle_select_check = 1;
         }
-        if (event.clientX - selcanvas.offsetLeft >= sspcx - 7 && event.clientX - selcanvas.offsetLeft <= sspcx + 10 && event.clientY - selcanvas.offsetTop >= sspcy - 7 && event.clientY - selcanvas.offsetTop <= sspcy + 10) {
+        if (event.pageX - selcanvas.offsetLeft >= sspcx - 7 && event.pageX - selcanvas.offsetLeft <= sspcx + 10 && event.pageY - selcanvas.offsetTop >= sspcy - 7 && event.pageY - selcanvas.offsetTop <= sspcy + 10) {
             Square_select_check = 1;
         }
     }, false);
@@ -107,9 +107,9 @@ document.addEventListener("DOMContentLoaded", function () {
 }, false);
 
 document.onmousemove = function (e) {
-    if (!e) e = window.event; // レガシー
+    if (!e) e = window.event; 
     if (Circle_select_check == 1) {
-        cicle_picker_draw(e.clientX - selcanvas.offsetLeft, e.clientY - selcanvas.offsetTop)
+        cicle_picker_draw(e.pageX - selcanvas.offsetLeft, e.pageY - selcanvas.offsetTop)
     }
     if (Square_select_check == 1) {
         /*ポインタ表示位置X　　マウス入力設置時は場所変更　毎入力ごとに初期化されてしまう*/
@@ -117,39 +117,44 @@ document.onmousemove = function (e) {
         /*ポインタ表示位置Y　　マウス入力設置時は場所変更　毎入力ごとに初期化されてしまう*/
         var SSpointY = sspcy
 
-        if ((e.clientX  >= canvas.offsetLeft + square_start_X && e.clientX <= canvas.offsetLeft + square_start_X + cwhlength)&&(sspcx  >= square_start_X && sspcx <=  square_start_X + cwhlength) ){
-            SSpointX = e.clientX - canvas.offsetLeft;
+        if ((e.pageX  >= canvas.offsetLeft + square_start_X) && (e.pageX <= canvas.offsetLeft + square_start_X + cwhlength)){
+            SSpointX = e.pageX - canvas.offsetLeft;
+        }else if( (e.pageX > canvas.offsetLeft + square_start_X + cwhlength) && (sspcx <  square_start_X + cwhlength)){
+            SSpointX=SSpointX+1;
+        }else if( (e.pageX < canvas.offsetLeft + square_start_X) && (sspcx >  square_start_X )){
+            SSpointX=SSpointX-1;
         }
-        //console.log("B",e.clientY - selcanvas.offsetTop,canvas.offsetTop + square_start_Y)
-        if ((e.clientY  >= canvas.offsetTop + square_start_Y && e.clientY <= canvas.offsetTop + square_start_Y + cwhlength)&&(sspcy  >= square_start_X && sspcy <=  square_start_X + cwhlength)) {
-            SSpointY = e.clientY - canvas.offsetTop;
-            //console.log("BB")
+        if ((e.pageY  >= canvas.offsetTop + square_start_Y) && (e.pageY <= canvas.offsetTop + square_start_Y + cwhlength)) {
+            SSpointY = e.pageY - canvas.offsetTop;
+        }else if( (e.pageY > canvas.offsetTop + square_start_Y + cwhlength) && (sspcy <  square_start_Y + cwhlength)){
+            SSpointY=SSpointY+1;
+        }else if( (e.pageY < canvas.offsetTop+ square_start_Y) && (sspcy >  square_start_Y )){
+            SSpointY=SSpointY-1;
         }
-        square_draw(SSpointX, SSpointY);
+        square_picker_draw(SSpointX, SSpointY);
     }
 };
 /**------------------カラーサークル描画------------------------------**/
 /*円の外側距離*/
 var routside = Math.min(canvas.width, canvas.height) / 2;
 /*円の幅*/
-var widthofround = 30;
+var widthofround = canvas.width*0.1;
 /*円の内側距離*/
 var rinside = routside - widthofround;
 /*キャンバス中心X点*/
-var centerX = canvas.width / 2;
+var centerX = Math.round(canvas.width / 2);
 /*キャンバス中心Y点*/
-var centerY = canvas.height / 2;
+var centerY = Math.round(canvas.height / 2);
 
 /*カラースクエア開始X点 */
-var square_start_X = centerX + rinside * Math.cos(225 * (Math.PI / 180));
+var square_start_X = Math.round(centerX + rinside * Math.cos(225 * (Math.PI / 180)));
 /*カラースクエア開始Y点 */
-var square_start_Y = centerY + rinside * Math.sin(225 * (Math.PI / 180));
+var square_start_Y = Math.round(centerY + rinside * Math.sin(225 * (Math.PI / 180)));
 /*カラースクエア縦横長さ */
-var cwhlength = (centerX - square_start_X) * 2
+var cwhlength = Math.round((centerX - square_start_X) * 2)
 
 sspcx = square_start_X + cwhlength;
 sspcy = square_start_Y;
-//console.log(square_start_X, square_start_Y, sspcx, sspcy, cwhlength)
 ctx.beginPath();
 ctx.arc(centerX, centerY, routside, 0, Math.PI * 2, true);
 ctx.arc(centerX, centerY, rinside, 0, Math.PI * 2, false);
@@ -210,7 +215,8 @@ function drawsquare(Color2) {
         rg -= steprg;
         rb -= steprb;
     }
-    square_draw(sspcx, sspcy);
+    console.log(square_start_X,square_start_Y,square_start_X+cwhlength,square_start_Y+cwhlength)
+    square_picker_draw(sspcx, sspcy);
 }
 /**------------------カラーサークルピックポイント描画------------------------------**/
 function cicle_picker_draw(mx, my) {
@@ -229,8 +235,7 @@ function cicle_picker_draw(mx, my) {
     drawsquare(col);
 }
 /**------------------カラースクエアピックポイント描画------------------------------**/
-function square_draw(msx, msy) {
-
+function square_picker_draw(msx, msy) {
     sspcx = msx;
     sspcy = msy;
     Spointpaint(msx, msy);
