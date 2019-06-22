@@ -62,9 +62,9 @@ var Circle_select_check = 0;
 /**------------------キャンバス定義------------------------------**/
 
 /*キャンバス横幅*/
-var width = 100;
+var width = 300;
 /*キャンバス縦幅*/
-var height = 100;
+var height = 300;
 
 /*カラー用キャンバス*/
 var canvas = document.createElement("canvas");
@@ -74,7 +74,7 @@ canvas.style.left = "150px";
 canvas.style.top = "110px";
 canvas.width = width;
 canvas.height = height;
-document.body.appendChild(canvas);
+document.getElementById("hello").appendChild(canvas);
 
 /*ピッカー用キャンバス*/
 var selcanvas = document.createElement("canvas");
@@ -85,7 +85,7 @@ selcanvas.style.top = canvas.style.top;
 selcanvas.width = canvas.width;
 selcanvas.height = canvas.height;
 
-document.body.appendChild(selcanvas);
+document.getElementById("hello").appendChild(selcanvas);
 
 document.addEventListener("DOMContentLoaded", function () {
 
