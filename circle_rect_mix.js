@@ -70,75 +70,84 @@ var height = 300;
 var canvas = document.createElement("canvas");
 var ctx = canvas.getContext("2d");
 canvas.style.position = 'absolute';
-canvas.style.left = "150px";
-canvas.style.top = "110px";
 canvas.width = width;
 canvas.height = height;
-document.getElementById("hello").appendChild(canvas);
+canvas.id = 'colcanvas';
+document.getElementById("hello4").appendChild(canvas);
 
 /*ピッカー用キャンバス*/
 var selcanvas = document.createElement("canvas");
 var selctx = selcanvas.getContext('2d');
 selcanvas.style.position = 'absolute';
-selcanvas.style.left = canvas.style.left;
-selcanvas.style.top = canvas.style.top;
+canvas.id = 'selcanvas';
 selcanvas.width = canvas.width;
 selcanvas.height = canvas.height;
+document.getElementById("hello4").appendChild(selcanvas);
 
-document.getElementById("hello").appendChild(selcanvas);
+//キャンバスプロパティ取得用
+var clientRect;
+//キャンバスページ内位置X,Y
+var px,py;
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    document.addEventListener("mousedown", function (event) {
-        if (event.pageX - selcanvas.offsetLeft >= cspcx - 7 && event.pageX - selcanvas.offsetLeft <= cspcx + 10 && event.pageY - selcanvas.offsetTop >= cspcy - 7 && event.pageY - selcanvas.offsetTop <= cspcy + 10) {
+    document.addEventListener("mousedown", function (e) {
+        //要素のプロパティ取得
+        clientRect = selcanvas.getBoundingClientRect();
+
+        // ページ全体内での要素位置 　スクロール量-画面内の位置
+        px = window.pageXOffset + clientRect.left;
+        py = window.pageYOffset + clientRect.top;
+
+        if (e.pageX - px >= cspcx - 7 && e.pageX - px <= cspcx + 10 && e.pageY - py >= cspcy - 7 && e.pageY - py <= cspcy + 10) {
             Circle_select_check = 1;
         }
-        if (event.pageX - selcanvas.offsetLeft >= sspcx - 7 && event.pageX - selcanvas.offsetLeft <= sspcx + 10 && event.pageY - selcanvas.offsetTop >= sspcy - 7 && event.pageY - selcanvas.offsetTop <= sspcy + 10) {
+        if (e.pageX - px >= sspcx - 7 && e.pageX - px <= sspcx + 10 && e.pageY - py >= sspcy - 7 && e.pageY - py <= sspcy + 10) {
             Square_select_check = 1;
         }
-    }, false);
-    document.addEventListener("mouseup", function (event) {
 
+    }, false);
+    document.addEventListener("mouseup", function (e) {
         Circle_select_check = 0;
         Square_select_check = 0;
+    }, false);
 
+    document.addEventListener("mousemove", function (e) {
+        if (Circle_select_check == 1) {
+            cicle_picker_draw(e.pageX - px, e.pageY - py)
+        }
 
+        if (Square_select_check == 1) {
+            /*ポインタ表示位置X　　マウス入力設置時は場所変更　毎入力ごとに初期化されてしまう*/
+            var SSpointX = sspcx;
+            /*ポインタ表示位置Y　　マウス入力設置時は場所変更　毎入力ごとに初期化されてしまう*/
+            var SSpointY = sspcy
+            //e.pageX-px =クリックしたページ全体（HTMLドキュメント上端から）の位置　ー　同じくcanvasの位置=クリックしたキャンバス内の位置
+            if ((e.pageX - px >= square_start_X) && (e.pageX - px <= square_start_X + cwhlength-1)) {
+                SSpointX = Math.round(e.pageX - px);
+            } else if ((e.pageX - px > square_start_X + cwhlength-1) && (sspcx < square_start_X + cwhlength-1)) {
+                SSpointX = SSpointX + 1;
+            } else if ((e.pageX - px < square_start_X) && (sspcx > square_start_X)) {
+                SSpointX = SSpointX - 1;
+            }
+            if ((e.pageY - py >= square_start_Y) && (e.pageY - py <= square_start_Y + cwhlength-1)) {
+                SSpointY = Math.round(e.pageY - py);
+            } else if ((e.pageY - py > square_start_Y + cwhlength-1) && (sspcy < square_start_Y + cwhlength-1)) {
+                SSpointY = SSpointY + 1;
+            } else if ((e.pageY - py < square_start_Y) && (sspcy > square_start_Y)) {
+                SSpointY = SSpointY - 1;
+            }
+            
+            square_picker_draw(SSpointX, SSpointY);
+        }
     }, false);
 }, false);
 
-document.onmousemove = function (e) {
-    if (!e) e = window.event; 
-    if (Circle_select_check == 1) {
-        cicle_picker_draw(e.pageX - selcanvas.offsetLeft, e.pageY - selcanvas.offsetTop)
-    }
-    if (Square_select_check == 1) {
-        /*ポインタ表示位置X　　マウス入力設置時は場所変更　毎入力ごとに初期化されてしまう*/
-        var SSpointX = sspcx;
-        /*ポインタ表示位置Y　　マウス入力設置時は場所変更　毎入力ごとに初期化されてしまう*/
-        var SSpointY = sspcy
-
-        if ((e.pageX  >= canvas.offsetLeft + square_start_X) && (e.pageX <= canvas.offsetLeft + square_start_X + cwhlength)){
-            SSpointX = e.pageX - canvas.offsetLeft;
-        }else if( (e.pageX > canvas.offsetLeft + square_start_X + cwhlength) && (sspcx <  square_start_X + cwhlength)){
-            SSpointX=SSpointX+1;
-        }else if( (e.pageX < canvas.offsetLeft + square_start_X) && (sspcx >  square_start_X )){
-            SSpointX=SSpointX-1;
-        }
-        if ((e.pageY  >= canvas.offsetTop + square_start_Y) && (e.pageY <= canvas.offsetTop + square_start_Y + cwhlength)) {
-            SSpointY = e.pageY - canvas.offsetTop;
-        }else if( (e.pageY > canvas.offsetTop + square_start_Y + cwhlength) && (sspcy <  square_start_Y + cwhlength)){
-            SSpointY=SSpointY+1;
-        }else if( (e.pageY < canvas.offsetTop+ square_start_Y) && (sspcy >  square_start_Y )){
-            SSpointY=SSpointY-1;
-        }
-        square_picker_draw(SSpointX, SSpointY);
-    }
-};
 /**------------------カラーサークル描画------------------------------**/
 /*円の外側距離*/
 var routside = Math.min(canvas.width, canvas.height) / 2;
 /*円の幅*/
-var widthofround = canvas.width*0.1;
+var widthofround = canvas.width * 0.1;
 /*円の内側距離*/
 var rinside = routside - widthofround;
 /*キャンバス中心X点*/
@@ -153,14 +162,14 @@ var square_start_Y = Math.round(centerY + rinside * Math.sin(225 * (Math.PI / 18
 /*カラースクエア縦横長さ */
 var cwhlength = Math.round((centerX - square_start_X) * 2)
 
-sspcx = square_start_X + cwhlength;
+sspcx = square_start_X + cwhlength-1;
 sspcy = square_start_Y;
 ctx.beginPath();
 ctx.arc(centerX, centerY, routside, 0, Math.PI * 2, true);
 ctx.arc(centerX, centerY, rinside, 0, Math.PI * 2, false);
 ctx.fillStyle = "#3912ff";
 ctx.fill();
-console.log(sspcx, sspcy)
+
 var canvasdata = ctx.getImageData(0, 0, width, height);
 var pixeldata = canvasdata.data;
 
@@ -180,10 +189,8 @@ for (x = 0; x < canvas.width; x++) {
 }
 ctx.putImageData(canvasdata, 0, 0);
 cicle_picker_draw(width / 2, 0);
-//drawsquare(hue)
 
 /**------------------カラースクエア描画------------------------------**/
-
 function drawsquare(Color2) {
 
     Color1 = [255, 255, 255];
@@ -200,7 +207,7 @@ function drawsquare(Color2) {
 
     for (startyh = square_start_Y; startyh <= square_start_Y + cwhlength; startyh++) {
         ctx.beginPath();
-        var grad = ctx.createLinearGradient(square_start_X, startyh, square_start_X + cwhlength, startyh);
+        var grad = ctx.createLinearGradient(square_start_X, startyh, square_start_X + cwhlength-1, startyh);
         /* グラデーション終点のオフセットと色をセット */
         grad.addColorStop(0, 'rgb(' + lr + ',' + lg + ' , ' + lb + ')');
         grad.addColorStop(1, 'rgb(' + rr + ',' + rg + ' , ' + rb + ')');
@@ -215,12 +222,12 @@ function drawsquare(Color2) {
         rg -= steprg;
         rb -= steprb;
     }
-    console.log(square_start_X,square_start_Y,square_start_X+cwhlength,square_start_Y+cwhlength)
+
     square_picker_draw(sspcx, sspcy);
 }
 /**------------------カラーサークルピックポイント描画------------------------------**/
 function cicle_picker_draw(mx, my) {
-    
+
     /*サークルの幅の中心距離*/
     var rmiddle = routside - (widthofround / 2);
     /*セレクトポインタの角度*/
@@ -230,7 +237,7 @@ function cicle_picker_draw(mx, my) {
     var SpointY = centerY + rmiddle * Math.sin(pointangle * (Math.PI / 180));
     cspcx = SpointX;
     cspcy = SpointY;
-    Spointpaint(SpointX, SpointY);
+    spoint_paint();
     col = ctx.getImageData(SpointX, SpointY, 1, 1).data;
     drawsquare(col);
 }
@@ -238,10 +245,10 @@ function cicle_picker_draw(mx, my) {
 function square_picker_draw(msx, msy) {
     sspcx = msx;
     sspcy = msy;
-    Spointpaint(msx, msy);
+    spoint_paint();
 }
 
-function Spointpaint(PX, PY) {
+function spoint_paint() {
 
     selctx.clearRect(0, 0, width, height)
     selctx.beginPath();
@@ -251,7 +258,7 @@ function Spointpaint(PX, PY) {
     selctx.stroke();
     selctx.fillStyle = "#ffffff";
     selctx.fill();
-    
+
     selctx.beginPath();
     selctx.arc(cspcx, cspcy, 7, 0, Math.PI * 2, true);
     selctx.arc(cspcx, cspcy, 4, 0, Math.PI * 2, false);
@@ -259,4 +266,11 @@ function Spointpaint(PX, PY) {
     selctx.stroke();
     selctx.fillStyle = "#ffffff";
     selctx.fill();
+    
+    get_color();
+}
+function get_color(){
+    var canvasdata = ctx.getImageData(sspcx, sspcy, 1, 1);
+    var pixeldata = canvasdata.data;
+    document.body.style.backgroundColor="rgb("+pixeldata[0]+","+pixeldata[1]+","+pixeldata[2]+")"
 }
