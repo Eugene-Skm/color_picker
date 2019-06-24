@@ -58,7 +58,12 @@ var sspcy;
 var Square_select_check = 0;
 /*サークルセレクト評価*/
 var Circle_select_check = 0;
- var flg = 0;
+var flg = 0;
+
+var agent = window.navigator.userAgent.toLowerCase();
+var ie9 = (agent.indexOf('msie 9.') !== -1);
+var ie11 = (agent.indexOf('trident/7') !== -1);
+
 /**------------------キャンバス定義------------------------------**/
 
 /*キャンバス横幅*/
@@ -189,35 +194,42 @@ for (x = 0; x < canvas.width; x++) {
 }
 ctx.putImageData(canvasdata, 0, 0);
 cicle_picker_draw(width / 2, 0);
+square_picker_draw(sspcx, sspcy);
 
 /**------------------カラースクエア描画------------------------------**/
+
+
+var stepl;
+var steprr;
+var steprg;
+var steprb;
+
 function drawsquare(Color2) {
-    var agent = window.navigator.userAgent.toLowerCase();
-    var ie9 = (agent.indexOf('msie 9.') !== -1);
-    var ie11 = (agent.indexOf('trident/7') !== -1);
-    Color1 = [255, 255, 255];
-        var lr = Color1[0],
-            lg = Color1[1],
-            lb = Color1[2];
-        var rr = Color2[0],
-            rg = Color2[1],
-            rb = Color2[2];
-            var stepl = 0.1;
-            var steprr = 0.1;
-            var steprg = 0.1;
-            var steprb = 0.1;/*
-        if(ie9||ie11){
-            var stepl = Math.round(255 / cwhlength);
-            var steprr = Math.round(rr / cwhlength);
-            var steprg = Math.round(rg / cwhlength);
-            var steprb = Math.round(rb / cwhlength);
-        }else{
-            var stepl = 255 / cwhlength;
-            var steprr = rr / cwhlength;
-            var steprg = rg / cwhlength;
-            var steprb = rb / cwhlength;
-        }
-        flg=1;*/
+    const Color1 = [255, 255, 255];
+    var lr = Color1[0],
+        lg = Color1[1],
+        lb = Color1[2];
+    var rr = Color2[0],
+        rg = Color2[1],
+        rb = Color2[2];
+    switch (flg){
+        case 0:
+            if (ie9 || ie11) {
+                stepl = Math.round(255 / cwhlength);
+                steprr = Math.round(rr / cwhlength);
+                steprg = Math.round(rg / cwhlength);
+                steprb = Math.round(rb / cwhlength);
+            } else {
+                stepl = 255 / cwhlength;
+                steprr = rr / cwhlength;
+                steprg = rg / cwhlength;
+                steprb = rb / cwhlength;
+            }
+            flg=1;
+            break;
+    }
+        
+    
     
     for (startyh = square_start_Y; startyh <= square_start_Y + cwhlength; startyh++) {
         ctx.beginPath();
@@ -234,10 +246,10 @@ function drawsquare(Color2) {
         rr -= steprr;
         rg -= steprg;
         rb -= steprb;
-        
+
     }
 
-    square_picker_draw(sspcx, sspcy);
+    
 }
 /**------------------カラーサークルピックポイント描画------------------------------**/
 function cicle_picker_draw(mx, my) {
@@ -253,6 +265,7 @@ function cicle_picker_draw(mx, my) {
     cspcy = SpointY;
     spoint_paint();
     col = ctx.getImageData(SpointX, SpointY, 1, 1).data;
+    flg=0;
     drawsquare(col);
 }
 /**------------------カラースクエアピックポイント描画------------------------------**/
@@ -288,7 +301,7 @@ function get_color() {
     var canvasdata = ctx.getImageData(sspcx, sspcy, 1, 1);
     var pixeldata = canvasdata.data;
     document.body.style.backgroundColor = "rgb(" + pixeldata[0] + "," + pixeldata[1] + "," + pixeldata[2] + ")"
-    console.log(pixeldata)
+    //console.log(pixeldata)
 }
 
 function ogRound(value, base) {
