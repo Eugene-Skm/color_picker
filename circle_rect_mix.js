@@ -128,16 +128,16 @@ document.addEventListener("DOMContentLoaded", function () {
             /*ポインタ表示位置Y　　マウス入力設置時は場所変更　毎入力ごとに初期化されてしまう*/
             var SSpointY = sspcy
             //e.pageX-px =クリックしたページ全体（HTMLドキュメント上端から）の位置　ー　同じくcanvasの位置=クリックしたキャンバス内の位置
-            if ((e.pageX - px >= square_start_X) && (e.pageX - px <= square_start_X + cwhlength - 1)) {
+            if ((e.pageX - px >= square_start_X) && (e.pageX - px <= square_endX)) {
                 SSpointX = Math.round(e.pageX - px);
-            } else if ((e.pageX - px > square_start_X + cwhlength - 1) && (sspcx < square_start_X + cwhlength - 1)) {
+            } else if ((e.pageX - px > square_endX) && (sspcx < square_endX)) {
                 SSpointX = SSpointX + 1;
             } else if ((e.pageX - px < square_start_X) && (sspcx > square_start_X)) {
                 SSpointX = SSpointX - 1;
             }
-            if ((e.pageY - py >= square_start_Y) && (e.pageY - py <= square_start_Y + cwhlength - 1)) {
+            if ((e.pageY - py >= square_start_Y) && (e.pageY - py <= square_endY)) {
                 SSpointY = Math.round(e.pageY - py);
-            } else if ((e.pageY - py > square_start_Y + cwhlength - 1) && (sspcy < square_start_Y + cwhlength - 1)) {
+            } else if ((e.pageY - py > square_endY) && (sspcy < square_endY)) {
                 SSpointY = SSpointY + 1;
             } else if ((e.pageY - py < square_start_Y) && (sspcy > square_start_Y)) {
                 SSpointY = SSpointY - 1;
@@ -167,7 +167,10 @@ var square_start_Y = Math.round(centerY + rinside * Math.sin(225 * (Math.PI / 18
 /*カラースクエア縦横長さ */
 var cwhlength = Math.round((centerX - square_start_X) * 2)
 
-sspcx = square_start_X + cwhlength - 1;
+var square_endX=square_start_X + cwhlength - 1;
+var square_endY=square_start_Y + cwhlength - 1;
+
+sspcx = square_endX;
 sspcy = square_start_Y;
 ctx.beginPath();
 ctx.arc(centerX, centerY, routside, 0, Math.PI * 2, true);
@@ -231,9 +234,9 @@ function drawsquare(Color2) {
         
     
     
-    for (startyh = square_start_Y; startyh <= square_start_Y + cwhlength; startyh++) {
+    for (startyh = square_start_Y; startyh <= square_endY; startyh++) {
         ctx.beginPath();
-        var grad = ctx.createLinearGradient(square_start_X, startyh, square_start_X + cwhlength - 1, startyh);
+        var grad = ctx.createLinearGradient(square_start_X, startyh, square_endX, startyh);
         /* グラデーション終点のオフセットと色をセット */
         grad.addColorStop(0, 'rgba(' + lr + ',' + lg + ' , ' + lb + ',1)');
         grad.addColorStop(1, 'rgba(' + rr + ',' + rg + ' , ' + rb + ',1)');
