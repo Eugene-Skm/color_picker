@@ -166,9 +166,16 @@ var square_start_X = Math.round(centerX + rinside * Math.cos(225 * (Math.PI / 18
 var square_start_Y = Math.round(centerY + rinside * Math.sin(225 * (Math.PI / 180)));
 /*カラースクエア縦横長さ */
 var cwhlength = Math.round((centerX - square_start_X) * 2)
+/*サークルの幅の中心距離*/
+var rmiddle = routside - (widthofround / 2);
+/*セレクトポインタの角度*/
+var pointangle;
 
-var square_endX=square_start_X + cwhlength - 1;
-var square_endY=square_start_Y + cwhlength - 1;
+var SpointX;
+var SpointY;
+square_endX=square_start_X + cwhlength - 1;
+square_endY=square_start_Y + cwhlength - 1;
+
 
 sspcx = square_endX;
 sspcy = square_start_Y;
@@ -234,7 +241,7 @@ function drawsquare(Color2) {
         
     
     
-    for (startyh = square_start_Y; startyh <= square_endY; startyh++) {
+    for (startyh = square_start_Y; startyh <= square_start_Y + cwhlength; startyh++) {
         ctx.beginPath();
         var grad = ctx.createLinearGradient(square_start_X, startyh, square_endX, startyh);
         /* グラデーション終点のオフセットと色をセット */
@@ -255,15 +262,14 @@ function drawsquare(Color2) {
     
 }
 /**------------------カラーサークルピックポイント描画------------------------------**/
+
 function cicle_picker_draw(mx, my) {
 
-    /*サークルの幅の中心距離*/
-    var rmiddle = routside - (widthofround / 2);
     /*セレクトポインタの角度*/
-    var pointangle = Math.atan2(my - centerY, mx - centerX) / Math.PI / 2 * 360;
+    pointangle = Math.atan2(my - centerY, mx - centerX) / Math.PI / 2 * 360;
 
-    var SpointX = centerX + rmiddle * Math.cos(pointangle * (Math.PI / 180));
-    var SpointY = centerY + rmiddle * Math.sin(pointangle * (Math.PI / 180));
+    SpointX = centerX + rmiddle * Math.cos(pointangle * (Math.PI / 180));
+    SpointY = centerY + rmiddle * Math.sin(pointangle * (Math.PI / 180));
     cspcx = SpointX;
     cspcy = SpointY;
     spoint_paint();
@@ -279,7 +285,6 @@ function square_picker_draw(msx, msy) {
 }
 
 function spoint_paint() {
-
     selctx.clearRect(0, 0, width, height)
     selctx.beginPath();
     selctx.arc(sspcx, sspcy, 7, 0, Math.PI * 2, true);
@@ -291,11 +296,12 @@ function spoint_paint() {
 
     selctx.beginPath();
     selctx.arc(cspcx, cspcy, 7, 0, Math.PI * 2, true);
-    selctx.arc(cspcx, cspcy, 4, 0, Math.PI * 2, false);
+    //selctx.arc(cspcx, cspcy, 4, 0, Math.PI * 2, false);
     selctx.strokeStyle = "#000000";
+    selctx.lineWidth=2
     selctx.stroke();
-    selctx.fillStyle = "#ffffff";
-    selctx.fill();
+    /*selctx.fillStyle = "#ffffff";
+    selctx.fill();*/
 
     get_color();
 }
