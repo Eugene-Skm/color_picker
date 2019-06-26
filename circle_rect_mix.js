@@ -1,4 +1,4 @@
-/**------------------HSV　→　RGB変換------------------------------**/
+/**------------------HSV→RGB変換------------------------------**/
 /*function hsvToRGB borrowed by http://imaya.blog.jp/archives/6733658.html*/
 function hsvToRGB(hue, saturation, value) {
     var hi;
@@ -67,28 +67,38 @@ var ie11 = (agent.indexOf('trident/7') !== -1);
 /**------------------キャンバス定義------------------------------**/
 
 /*キャンバス横幅*/
-var width = 300;
+var width;
 /*キャンバス縦幅*/
-var height = 300;
+var height;
 
 /*カラー用キャンバス*/
 var canvas = document.createElement("canvas");
 var ctx = canvas.getContext("2d");
-canvas.style.position = 'absolute';
-canvas.width = width;
-canvas.height = height;
-canvas.id = 'colcanvas';
-document.getElementById("hello4").appendChild(canvas);
-
 /*ピッカー用キャンバス*/
 var selcanvas = document.createElement("canvas");
 var selctx = selcanvas.getContext('2d');
-selcanvas.style.position = 'absolute';
-canvas.id = 'selcanvas';
-selcanvas.width = canvas.width;
-selcanvas.height = canvas.height;
-document.getElementById("hello4").appendChild(selcanvas);
 
+function color_picker(ids, width) {
+    make_canvas(ids, width);
+    draw_color_circle();
+    square_picker_draw(sspcx, sspcy);
+}
+
+function make_canvas(id, widths) {
+    width = widths;
+    height = widths;
+    canvas.style.position = 'absolute';
+    canvas.width = width;
+    canvas.height = height;
+    canvas.id = 'colcanvas';
+    document.getElementById(id).appendChild(canvas);
+
+    selcanvas.style.position = 'absolute';
+    canvas.id = 'selcanvas';
+    selcanvas.width = canvas.width;
+    selcanvas.height = canvas.height;
+    document.getElementById(id).appendChild(selcanvas);
+}
 //キャンバスプロパティ取得用
 var clientRect;
 //キャンバスページ内位置X,Y
@@ -118,93 +128,105 @@ document.addEventListener("DOMContentLoaded", function () {
     }, false);
 
     document.addEventListener("mousemove", function (e) {
-        if (Circle_select_check == 1) {
-            cicle_picker_draw(e.pageX - px, e.pageY - py)
+        if (Circle_select_check === 1) {
+            cicle_picker_draw(e.pageX - px, e.pageY - py);
         }
 
-        if (Square_select_check == 1) {
-            /*ポインタ表示位置X　　マウス入力設置時は場所変更　毎入力ごとに初期化されてしまう*/
-            var SSpointX = sspcx;
-            /*ポインタ表示位置Y　　マウス入力設置時は場所変更　毎入力ごとに初期化されてしまう*/
-            var SSpointY = sspcy
-            //e.pageX-px =クリックしたページ全体（HTMLドキュメント上端から）の位置　ー　同じくcanvasの位置=クリックしたキャンバス内の位置
+        if (Square_select_check === 1) {
+            //e.pageX-px =クリックしたページ全体~HTMLドキュメント上端からの位置~ー~同じくcanvasの位置=クリックしたキャンバス内の位置
             if ((e.pageX - px >= square_start_X) && (e.pageX - px <= square_endX)) {
-                SSpointX = Math.round(e.pageX - px);
+                sspcx = Math.round(e.pageX - px);
             } else if ((e.pageX - px > square_endX) && (sspcx < square_endX)) {
-                SSpointX = SSpointX + 1;
+                sspcx = sspcy + 1;
             } else if ((e.pageX - px < square_start_X) && (sspcx > square_start_X)) {
-                SSpointX = SSpointX - 1;
+                sspcx = sspcx - 1;
             }
             if ((e.pageY - py >= square_start_Y) && (e.pageY - py <= square_endY)) {
-                SSpointY = Math.round(e.pageY - py);
+                sspcy = Math.round(e.pageY - py);
             } else if ((e.pageY - py > square_endY) && (sspcy < square_endY)) {
-                SSpointY = SSpointY + 1;
+                sspcy = sspcy + 1;
             } else if ((e.pageY - py < square_start_Y) && (sspcy > square_start_Y)) {
-                SSpointY = SSpointY - 1;
+                sspcy = sspcy - 1;
             }
-
-            square_picker_draw(SSpointX, SSpointY);
+            square_picker_draw(sspcx, sspcy);
         }
     }, false);
 }, false);
 
 /**------------------カラーサークル描画------------------------------**/
 /*円の外側距離*/
-var routside = Math.min(canvas.width, canvas.height) / 2;
+var routside;
 /*円の幅*/
-var widthofround = canvas.width * 0.1;
+var round_width;
 /*円の内側距離*/
-var rinside = routside - widthofround;
+var rinside;
 /*キャンバス中心X点*/
-var centerX = Math.round(canvas.width / 2);
+var centerX;
 /*キャンバス中心Y点*/
-var centerY = Math.round(canvas.height / 2);
+var centerY;
 
 /*カラースクエア開始X点 */
-var square_start_X = Math.round(centerX + rinside * Math.cos(225 * (Math.PI / 180)));
+var square_start_X;
 /*カラースクエア開始Y点 */
-var square_start_Y = Math.round(centerY + rinside * Math.sin(225 * (Math.PI / 180)));
+var square_start_Y;
 /*カラースクエア縦横長さ */
-var cwhlength = Math.round((centerX - square_start_X) * 2)
+var cwhlength;
 /*サークルの幅の中心距離*/
-var rmiddle = routside - (widthofround / 2);
+var rmiddle;
 /*セレクトポインタの角度*/
 var pointangle;
+var square_endX;
+var square_endY;
 
-var SpointX;
-var SpointY;
-square_endX=square_start_X + cwhlength - 1;
-square_endY=square_start_Y + cwhlength - 1;
+function draw_color_circle() {
+    routside = Math.min(canvas.width, canvas.height) / 2;
+    round_width = canvas.width * 0.1;
+    rinside = routside - round_width;
 
+    centerX = Math.round(canvas.width / 2);
+    centerY = Math.round(canvas.height / 2);
 
-sspcx = square_endX;
-sspcy = square_start_Y;
-ctx.beginPath();
-ctx.arc(centerX, centerY, routside, 0, Math.PI * 2, true);
-ctx.arc(centerX, centerY, rinside, 0, Math.PI * 2, false);
-ctx.fillStyle = "#3912ff";
-ctx.fill();
+    square_start_X = Math.round(centerX + rinside * Math.cos(225 * (Math.PI / 180)));
+    square_start_Y = Math.round(centerY + rinside * Math.sin(225 * (Math.PI / 180)));
 
-var canvasdata = ctx.getImageData(0, 0, width, height);
-var pixeldata = canvasdata.data;
+    cwhlength = Math.round((centerX - square_start_X) * 2);
 
-for (x = 0; x < canvas.width; x++) {
-    for (y = 0; y < canvas.height; y++) {
-        var basedindex = (y * width + x) * 4;
+    rmiddle = routside - (round_width / 2);
 
-        if (pixeldata[basedindex] > 0) {
-            var hue = (Math.atan2(y - centerY, x - centerX) / Math.PI / 2 * 360) + 90;
-            var colors = hsvToRGB(hue, 100, 100);
+    square_endX = square_start_X + cwhlength - 1;
+    square_endY = square_start_Y + cwhlength - 1;
 
-            pixeldata[basedindex] = colors[0];
-            pixeldata[basedindex + 1] = colors[1];
-            pixeldata[basedindex + 2] = colors[2];
+    sspcx = square_endX;
+    sspcy = square_start_Y;
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, routside, 0, Math.PI * 2, true);
+    ctx.arc(centerX, centerY, rinside, 0, Math.PI * 2, false);
+    ctx.fillStyle = "#3912ff";
+    ctx.fill();
+
+    var canvasdata = ctx.getImageData(0, 0, width, height);
+    var pixeldata = canvasdata.data;
+
+    for (var x = 0; x < canvas.width; x++) {
+        for (var y = 0; y < canvas.height; y++) {
+            var basedindex = (y * width + x) * 4;
+
+            if (pixeldata[basedindex] > 0) {
+                var hue = (Math.atan2(y - centerY, x - centerX) / Math.PI / 2 * 360) + 90;
+                var colors = hsvToRGB(hue, 100, 100);
+
+                pixeldata[basedindex] = colors[0];
+                pixeldata[basedindex + 1] = colors[1];
+                pixeldata[basedindex + 2] = colors[2];
+            }
         }
     }
+    ctx.putImageData(canvasdata, 0, 0);
+    cicle_picker_draw(width / 2, 0);
+
 }
-ctx.putImageData(canvasdata, 0, 0);
-cicle_picker_draw(width / 2, 0);
-square_picker_draw(sspcx, sspcy);
+
+
 
 /**------------------カラースクエア描画------------------------------**/
 
@@ -215,14 +237,14 @@ var steprg;
 var steprb;
 
 function drawsquare(Color2) {
-    const Color1 = [255, 255, 255];
+    var Color1 = [255, 255, 255];
     var lr = Color1[0],
         lg = Color1[1],
         lb = Color1[2];
     var rr = Color2[0],
         rg = Color2[1],
         rb = Color2[2];
-    switch (flg){
+    switch (flg) {
         case 0:
             if (ie9 || ie11) {
                 stepl = Math.round(255 / cwhlength);
@@ -235,13 +257,13 @@ function drawsquare(Color2) {
                 steprg = rg / cwhlength;
                 steprb = rb / cwhlength;
             }
-            flg=1;
+            flg = 1;
             break;
     }
-        
-    
-    
-    for (startyh = square_start_Y; startyh <= square_start_Y + cwhlength; startyh++) {
+
+
+
+    for (var startyh = square_start_Y; startyh <= square_start_Y + cwhlength; startyh++) {
         ctx.beginPath();
         var grad = ctx.createLinearGradient(square_start_X, startyh, square_endX, startyh);
         /* グラデーション終点のオフセットと色をセット */
@@ -259,22 +281,22 @@ function drawsquare(Color2) {
 
     }
 
-    
+
 }
 /**------------------カラーサークルピックポイント描画------------------------------**/
 
 function cicle_picker_draw(mx, my) {
-
     /*セレクトポインタの角度*/
-    pointangle = Math.atan2(my - centerY, mx - centerX) / Math.PI / 2 * 360;
+    var px = mx - centerX;
+    var py = my - centerY;
+    pointangle = Math.atan2(py, px) / Math.PI / 2 * 360;
 
-    SpointX = centerX + rmiddle * Math.cos(pointangle * (Math.PI / 180));
-    SpointY = centerY + rmiddle * Math.sin(pointangle * (Math.PI / 180));
-    cspcx = SpointX;
-    cspcy = SpointY;
+    cspcx = centerX + rmiddle * Math.cos(pointangle * (Math.PI / 180));
+    cspcy = centerY + rmiddle * Math.sin(pointangle * (Math.PI / 180));
+
     spoint_paint();
-    col = ctx.getImageData(SpointX, SpointY, 1, 1).data;
-    flg=0;
+    var col = ctx.getImageData(cspcx, cspcy, 1, 1).data;
+    flg = 0;
     drawsquare(col);
 }
 /**------------------カラースクエアピックポイント描画------------------------------**/
@@ -285,7 +307,7 @@ function square_picker_draw(msx, msy) {
 }
 
 function spoint_paint() {
-    selctx.clearRect(0, 0, width, height)
+    selctx.clearRect(0, 0, width, height);
     selctx.beginPath();
     selctx.arc(sspcx, sspcy, 7, 0, Math.PI * 2, true);
     selctx.arc(sspcx, sspcy, 4, 0, Math.PI * 2, false);
@@ -298,10 +320,8 @@ function spoint_paint() {
     selctx.arc(cspcx, cspcy, 7, 0, Math.PI * 2, true);
     //selctx.arc(cspcx, cspcy, 4, 0, Math.PI * 2, false);
     selctx.strokeStyle = "#000000";
-    selctx.lineWidth=2
+    selctx.lineWidth = 2;
     selctx.stroke();
-    /*selctx.fillStyle = "#ffffff";
-    selctx.fill();*/
 
     get_color();
 }
@@ -309,8 +329,8 @@ function spoint_paint() {
 function get_color() {
     var canvasdata = ctx.getImageData(sspcx, sspcy, 1, 1);
     var pixeldata = canvasdata.data;
-    document.body.style.backgroundColor = "rgb(" + pixeldata[0] + "," + pixeldata[1] + "," + pixeldata[2] + ")"
-    //console.log(pixeldata)
+    document.body.style.backgroundColor = "rgb(" + pixeldata[0] + "," + pixeldata[1] + "," + pixeldata[2] + ")";
+
 }
 
 function ogRound(value, base) {
