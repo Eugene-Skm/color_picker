@@ -137,7 +137,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if ((e.pageX - px >= square_start_X) && (e.pageX - px <= square_endX)) {
                 sspcx = Math.round(e.pageX - px);
             } else if ((e.pageX - px > square_endX) && (sspcx < square_endX)) {
-                sspcx = sspcy + 1;
+                sspcx = sspcx + 1;
             } else if ((e.pageX - px < square_start_X) && (sspcx > square_start_X)) {
                 sspcx = sspcx - 1;
             }
