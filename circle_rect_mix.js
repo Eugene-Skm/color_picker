@@ -134,15 +134,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (Square_select_check === 1) {
             //e.pageX-px =クリックしたページ全体~HTMLドキュメント上端からの位置~ー~同じくcanvasの位置=クリックしたキャンバス内の位置
+            
             if ((e.pageX - px >= square_start_X) && (e.pageX - px <= square_endX)) {
+                
                 sspcx = Math.round(e.pageX - px);
+                console.log(e.pageX - px,sspcx)
             } else if ((e.pageX - px > square_endX) && (sspcx < square_endX)) {
                 sspcx = sspcx + 1;
             } else if ((e.pageX - px < square_start_X) && (sspcx > square_start_X)) {
                 sspcx = sspcx - 1;
             }
             if ((e.pageY - py >= square_start_Y) && (e.pageY - py <= square_endY)) {
+                
                 sspcy = Math.round(e.pageY - py);
+                console.log(e.pageY - py,sspcy)
             } else if ((e.pageY - py > square_endY) && (sspcy < square_endY)) {
                 sspcy = sspcy + 1;
             } else if ((e.pageY - py < square_start_Y) && (sspcy > square_start_Y)) {
@@ -246,17 +251,17 @@ function drawsquare(Color2) {
         rb = Color2[2];
     switch (flg) {
         case 0:
-            if (ie9 || ie11) {
-                stepl = Math.round(255 / cwhlength);
-                steprr = Math.round(rr / cwhlength);
-                steprg = Math.round(rg / cwhlength);
-                steprb = Math.round(rb / cwhlength);
-            } else {
+            /*if (ie9 || ie11) {
+                stepl = ogRound(255 / cwhlength,10);
+                steprr = ogRound(rr / cwhlength,10);
+                steprg = ogRound(rg / cwhlength,10);
+                steprb = ogRound(rb / cwhlength,10);
+            } else {*/
                 stepl = 255 / cwhlength;
                 steprr = rr / cwhlength;
                 steprg = rg / cwhlength;
                 steprb = rb / cwhlength;
-            }
+            /*}*/
             flg = 1;
             break;
     }
@@ -267,18 +272,27 @@ function drawsquare(Color2) {
         ctx.beginPath();
         var grad = ctx.createLinearGradient(square_start_X, startyh, square_endX, startyh);
         /* グラデーション終点のオフセットと色をセット */
-        grad.addColorStop(0, 'rgba(' + lr + ',' + lg + ' , ' + lb + ',1)');
-        grad.addColorStop(1, 'rgba(' + rr + ',' + rg + ' , ' + rb + ',1)');
+        grad.addColorStop(0, 'rgba(' + ogRound(lr) + ',' + ogRound(lg) + ' , ' + ogRound(lb) + ',1)');
+        grad.addColorStop(1, 'rgba(' + ogRound(rr) + ',' + ogRound(rg) + ' , ' + ogRound(rb) + ',1)');
         ctx.fillStyle = grad;
         ctx.rect(square_start_X, startyh, cwhlength, 1);
         ctx.fill();
+       /* if (ie9 || ie11) {
+            lr = Math.round(lr-stepl);
+            lg = Math.round(lg-stepl);
+            lb = Math.round(lb-stepl);
+            rr = Math.round(rr-steprr);
+            rg = Math.round(rg-steprg);
+            rb = Math.round(rb-steprb);
+        /*}else{*/
+        
         lr -= stepl;
         lg -= stepl;
         lb -= stepl;
         rr -= steprr;
         rg -= steprg;
         rb -= steprb;
-
+       /* }*/
     }
 
 
@@ -330,9 +344,10 @@ function get_color() {
     var canvasdata = ctx.getImageData(sspcx, sspcy, 1, 1);
     var pixeldata = canvasdata.data;
     document.body.style.backgroundColor = "rgb(" + pixeldata[0] + "," + pixeldata[1] + "," + pixeldata[2] + ")";
+    console.log(pixeldata)
 
 }
 
 function ogRound(value, base) {
-    return Math.round(value * base) / base;
+    return value-(value%1);
 }
