@@ -58,7 +58,7 @@ var sspcy;
 var Square_select_check = 0;
 /*サークルセレクト評価*/
 var Circle_select_check = 0;
-var flg = 0;
+//var flg = 0;
 
 var agent = window.navigator.userAgent.toLowerCase();
 var ie9 = (agent.indexOf('msie 9.') !== -1);
@@ -256,8 +256,8 @@ function drawsquare(Color2) {
     var rr = Color2[0],
         rg = Color2[1],
         rb = Color2[2];
-    switch (flg) {
-        case 0:
+    //switch (flg) {
+        //case 0:
             /*if (ie9 || ie11) {
                 stepl = Math.floor(255 / cwhlength,10);
                 steprr = Math.floor(rr / cwhlength,10);
@@ -269,9 +269,9 @@ function drawsquare(Color2) {
                 steprg = rg / cwhlength;
                 steprb = rb / cwhlength;
             /*}*/
-            flg = 1;
-            break;
-    }
+           // flg = 1;
+            //break;
+    //}
 
 
 
@@ -292,8 +292,7 @@ function drawsquare(Color2) {
             rg = Math.round(rg-steprg);
             rb = Math.round(rb-steprb);
         /*}else{*/
-        var canvasdata = ctx.getImageData(square_start_X, startyh, 1, 1);
-        var pixeldata = canvasdata.data;
+        
         lr -= stepl;
         lg -= stepl;
         lb -= stepl;
@@ -318,7 +317,7 @@ function cicle_picker_draw(mx, my) {
 
     spoint_paint();
     var col = ctx.getImageData(cspcx, cspcy, 1, 1).data;
-    flg = 0;
+    //flg = 0;
     drawsquare(col);
 }
 /**------------------カラースクエアピックポイント描画------------------------------**/
@@ -352,5 +351,6 @@ function get_color() {
     var canvasdata = ctx.getImageData(sspcx, sspcy, 1, 1);
     var pixeldata = canvasdata.data;
     //document.body.style.backgroundColor = "rgb(" + pixeldata[0] + "," + pixeldata[1] + "," + pixeldata[2] + ")";
+    console.log(pixeldata)
 }
 
