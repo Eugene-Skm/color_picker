@@ -116,9 +116,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (e.pageX - px >= cspcx - 7 && e.pageX - px <= cspcx + 10 && e.pageY - py >= cspcy - 7 && e.pageY - py <= cspcy + 10) {
             Circle_select_check = 1;
+        }else{
+            var length_center_clickpoint=Math.sqrt(Math.pow((e.pageX-px)-centerX,2)+Math.pow((e.pageY-py)-centerY,2));
+            if(length_center_clickpoint>=rinside&&length_center_clickpoint<=routside){
+                cicle_picker_draw(e.pageX - px, e.pageY - py);
+                Circle_select_check=1;
+            }
         }
         if (e.pageX - px >= sspcx - 7 && e.pageX - px <= sspcx + 10 && e.pageY - py >= sspcy - 7 && e.pageY - py <= sspcy + 10) {
             Square_select_check = 1;
+        }else if((e.pageX - px >= square_start_X) && (e.pageX - px <= square_endX)&&(e.pageY - py >= square_start_Y) && (e.pageY - py <= square_endY)){
+            sspcx=Math.round(e.pageX - px);
+            sspcy=Math.round(e.pageY - py);
+            square_picker_draw(sspcx, sspcy);
+            Square_select_check=1;
         }
 
     }, false);
@@ -150,7 +161,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 sspcy = sspcy - 1;
             }
             square_picker_draw(sspcx, sspcy);
-            console.log(sspcx,square_endX,sspcy,square_endY)
         }
     }, false);
 }, false);
@@ -284,8 +294,6 @@ function drawsquare(Color2) {
         /*}else{*/
         var canvasdata = ctx.getImageData(square_start_X, startyh, 1, 1);
         var pixeldata = canvasdata.data;
-        console.log(pixeldata)
-        console.log(lr,lg,lb)
         lr -= stepl;
         lg -= stepl;
         lb -= stepl;
@@ -344,6 +352,5 @@ function get_color() {
     var canvasdata = ctx.getImageData(sspcx, sspcy, 1, 1);
     var pixeldata = canvasdata.data;
     //document.body.style.backgroundColor = "rgb(" + pixeldata[0] + "," + pixeldata[1] + "," + pixeldata[2] + ")";
-    console.log(pixeldata)
 }
 
